@@ -19,6 +19,11 @@ int main() {
     // Falls Datei ein Array von Scans enthält -> ersten nehmen
     json scan = j.is_array() ? j[0] : j;
 
+    // Scan verwerfen, wenn ranges nicht genau 360 Werte hat
+    if (!scan["ranges"].is_array() || scan["ranges"].size() != 360) {
+        return 0; // nichts ausgeben, String/Scan verworfen
+    }
+
     // Float-Array aufbauen: [angle_increment, range_min, range_max, ranges...]
     std::vector<float> values;
     values.reserve(3 + scan["ranges"].size());
