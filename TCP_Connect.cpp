@@ -64,7 +64,7 @@ protected:
         char recvBuf[4096];
         bool first = true;
 
-        int maxMessages = 50;
+        int maxMessages = 1;
         int msgCount = 0;
 
         while (msgCount < maxMessages) {
