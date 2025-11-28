@@ -1,19 +1,13 @@
-#ifndef CMD_PARSER
-#define CMD_PARSER
+#ifndef CMD_PARSER_H
+#define CMD_PARSER_H
 
-#include <cstddef>  // für size_t
+#include <string>
 
-// Baut aus v und w einen Command-String.
+// Erzeugt aus v und w einen Command-String im Format:
+// ---START---{"linear": v, "angular": w}___END___
 //
-// v, w         : Pointer auf die Geschwindigkeiten
-// outBuffer    : Ziel-Buffer (vom Aufrufer bereitgestellt)
-// outBufferSize: Größe des Buffers in Bytes
-//
-// Rückgabewert : true  -> String erfolgreich erstellt
-//                false -> Fehler (z.B. Buffer zu klein oder Pointer nullptr)
-bool buildCmdString(const float* v,
-                    const float* w,
-                    char* outBuffer,
-                    std::size_t outBufferSize);
+// v, w : Pointer auf die Geschwindigkeiten
+// RÃ¼ckgabe: fertiger String
+std::string buildCmdString(const float* v, const float* w);
 
 #endif // CMD_PARSER_H
