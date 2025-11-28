@@ -1,34 +1,20 @@
-#include "cmd_parser.h"
-#include <cstdio>   // für std::snprintf
+#include "CMD_Parser.h"
+#include <string>
 
-bool buildCmdString(const float* v,
-                    const float* w,
-                    char* outBuffer,
-                    std::size_t outBufferSize)
+std::string buildCmdString(const float* v, const float* w)
 {
-    // Einfache Sicherheitschecks auf gültige Pointer und Buffergröße
-    if (v == nullptr || w == nullptr || outBuffer == nullptr || outBufferSize == 0) {
-        return false;
+    // einfache Sicherheitschecks
+    if (v == nullptr || w == nullptr) {
+        return "---START---{\"linear\": 0.0, \"angular\": 0.0}___END___";
     }
 
-    // String im gewünschten Format:
-    // ---START---{"linear": 0.1, "angular": 0.5}___END___
-    //
-    // %.3f -> 3 Nachkommastellen; kannst du bei Bedarf ändern
-    int written = std::snprintf(
-        outBuffer,
-        outBufferSize,
-        "---START---{\"linear\": %.3f, \"angular\": %.3f}___END___",
-        *v,
-        *w
-    );
+    // sehr simple Implementierung mit std::to_string
+    // (wenn du spÃ¤ter weniger Nachkommastellen willst, kann man das noch formatieren)
+    std::string result = "---START---{\"linear\": ";
+    result += std::to_string(*v);
+    result += ", \"angular\": ";
+    result += std::to_string(*w);
+    result += "}___END___";
 
-    // snprintf gibt die Anzahl der Zeichen zurück, die geschrieben werden
-    // würden (ohne Nullterminator). Wenn das >= Buffergröße ist, war der
-    // Buffer zu klein.
-    if (written < 0 || static_cast<std::size_t>(written) >= outBufferSize) {
-        return false;
-    }
-
-    return true;
+    return result;
 }
