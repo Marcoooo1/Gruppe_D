@@ -1,0 +1,56 @@
+#include <fstream>
+#include <string>
+#include "json.hpp"        // nlohmann/json
+
+using json = nlohmann::json;
+
+// Datei → String → JSON → Float-Array.
+
+int main() {
+    // JSON-Datei komplett in einen String lesen
+    std::ifstream in("laser_output.json");
+    if (!in) return 1;
+
+    std::string jsonStr((std::istreambuf_iterator<char>(in)),
+                         std::istreambuf_iterator<char>());
+
+    // JSON parsen
+    json j = json::parse(jsonStr);
+
+    json scan = j.is_array() ? j[0] : j;
+
+    // Scan verwerfen, wenn ranges nicht genau 360 Werte hat
+    if (!scan.contains("ranges") ||
+        !scan["ranges"].is_array() ||
+        scan["ranges"].size() != 360) {
+        return 0; // nichts ausgeben, Scan verworfen
+    }
+
+    // Feste Größen
+    constexpr std::size_t NUM_RANGES = 360;
+    constexpr std::size_t TOTAL_SIZE = 3 + NUM_RANGES; // angle_inc + range_min + range_max + ranges
+
+    // Float-Array anlegen
+    static float values[TOTAL_SIZE];
+
+    // Header-Werte
+    values[0] = scan["angle_increment"].get<float>();
+    values[1] = scan["range_min"].get<float>();
+    values[2] = scan["range_max"].get<float>();
+
+    // ranges in das Array kopieren
+    for (std::size_t i = 0; i < NUM_RANGES; ++i) {
+        values[3 + i] = scan["ranges"][i].get<float>();
+    }
+
+    // Pointer auf das Array        
+    float* ptr = values; //Muss noch wieder deleted werden
+
+        std::cout << "angle_increment=" << ptr[0]
+              << " range_min=" << ptr[1]
+              << " range_max=" << ptr[2]
+              << " first_range=" << ptr[3] << std::endl;
+
+    return 0;
+}
+
