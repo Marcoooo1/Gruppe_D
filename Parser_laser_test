@@ -46,6 +46,11 @@ int main() {
     // Pointer auf das Array        
     float* ptr = values; //Muss noch wieder deleted werden
 
+        std::cout << "angle_increment=" << ptr[0]
+              << " range_min=" << ptr[1]
+              << " range_max=" << ptr[2]
+              << " first_range=" << ptr[3] << std::endl;
+
     return 0;
 }
 
