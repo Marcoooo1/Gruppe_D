@@ -32,8 +32,8 @@ std::unique_ptr<Velocity> computeVelocity(const Pose& current, const Pose& goal)
     float dtheta = goal.z - current.z;
 
     float rho   = sqrtf(dx * dx + dy * dy);
-    float alpha = atan2f(dy, dx) - current.z;
-    float beta  = dtheta - alpha;
+    float alpha = (- dtheta) + atan2f(dy, dx);
+    float beta  = (-dtheta) - alpha;
 
     vel->v = K_RHO * rho;
     vel->w = K_ALPHA * alpha + K_BETA * beta;
@@ -66,3 +66,4 @@ int main() {
 
     return 0;
 }
+
