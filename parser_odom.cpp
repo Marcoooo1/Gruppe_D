@@ -1,15 +1,26 @@
+#include "odom_parser.hpp"
+
 #include <fstream>
 #include <string>
-#include <cstddef>
 #include <cmath>
-#include "json.hpp"     // nlohmann/json
+#include <iostream>
+
+#include "json.hpp"   // nlohmann/json
 
 using json = nlohmann::json;
 
-int main() {
+bool parseOdomFromJson(const std::string& filename, float* outValues)
+{
+    if (!outValues) {
+        return false;
+    }
+
     // JSON-Datei komplett in einen String lesen
-    std::ifstream in("odom_output.json");   // Dateiname bei Bedarf anpassen
-    if (!in) return 1;
+    std::ifstream in(filename);
+    if (!in) {
+        std::cerr << "Kann Datei nicht öffnen: " << filename << '\n';
+        return false;
+    }
 
     std::string jsonStr((std::istreambuf_iterator<char>(in)),
                          std::istreambuf_iterator<char>());
@@ -36,24 +47,18 @@ int main() {
         1.0 - 2.0 * (qy * qy + qz * qz)
     );
 
-    // Array mit [x, y, yaw]
-    constexpr std::size_t NUM_VALUES = 3;
-    static float values[NUM_VALUES];
+    // Array füllen: [x, y, yaw]
+    outValues[0] = static_cast<float>(px);
+    outValues[1] = static_cast<float>(py);
+    outValues[2] = static_cast<float>(yaw);
 
-    values[0] = static_cast<float>(px);
-    values[1] = static_cast<float>(py);
-    values[2] = static_cast<float>(yaw);
+    // Pointer auf das Array (zur Demonstration, gleiche Werte wie outValues)
+    float* ptr = outValues;
 
-    // Pointer auf das Array
-    float* ptr = values;
-
-      float* ptr = values;
-
-    // Array über Pointer im Output ausgeben
+    // Ausgabe im Output (Konsole)
     std::cout << "x="   << ptr[0]
               << " y="   << ptr[1]
               << " yaw=" << ptr[2] << '\n';
 
-
-    return 0;
+    return true;
 }
