@@ -29,7 +29,7 @@ Velocity computeVelocity(const Pose& current, const Pose& goal,
     float rho = sqrtf(dx*dx + dy*dy);
 
     // Alpha (Heading-Fehler)
-    float alpha =atan2f(dy, dx) - current.z;
+    float alpha =atan2f(dy, dx) - dtheta;
 
     // Beta (Orientierungsfehler)
     float beta = dtheta - alpha;
@@ -38,7 +38,7 @@ Velocity computeVelocity(const Pose& current, const Pose& goal,
     vel.v = k_rho * rho;
     vel.w = k_alpha * alpha + k_beta * beta;
 
-    // Sättigung
+    // SÃ¤ttigung
 
     return vel;
 }
@@ -55,7 +55,7 @@ int main() {
     Pose goal;
     goal.x = 1.0f;        // z.B. 1 Meter
     goal.y = 1.0f;
-    goal.z = 3.1416 / 2;    // Ziel-Yaw = 90°
+    goal.z = 3.1416 / 2;    // Ziel-Yaw = 90Â°
 
     // Geschwindigkeit berechnen
     Velocity vel = computeVelocity(current, goal);
@@ -66,3 +66,4 @@ int main() {
 
     return 0;
 }
+
