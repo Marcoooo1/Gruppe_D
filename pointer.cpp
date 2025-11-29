@@ -1,8 +1,10 @@
-//Controller Berechnung mit ausgabe als pointer
+//Controller Berechnung mit ausgabe als pointer und 4 ziele
 #include <iostream>
 #include <cmath>
-#include <memory>   // für std::unique_ptr
+#include <memory>
+#include <vector>
 
+// Eigene PI-Konstante
 const float PI = 3.14159265358979323846f;
 
 // Konstanten aus Buch
@@ -13,7 +15,7 @@ const float K_BETA  = -1.5f;
 struct Pose {
     float x;
     float y;
-    float z;   // z = yaw (theta)
+    float z;   // yaw
 };
 
 struct Velocity {
@@ -40,17 +42,27 @@ std::unique_ptr<Velocity> computeVelocity(const Pose& current, const Pose& goal)
 }
 
 int main() {
-    Pose current{0.2f, 0.3f, 0.0f};
-    Pose goal;
+    // Startposition
+    Pose current{0.0f, 0.0f, 0.0f};
 
-    goal.x = 1.0f;
-    goal.y = 1.0f;
-    goal.z = PI / 2.0f;   // Kein M_PI, kein <numbers>
+    // Zielpunkte (4 Stück)
+    std::vector<Pose> goals = {
+        {1.0f, 1.0f, PI/2.0f},
+        {1.5f, 0.5f, PI/4.0f},
+        {0.5f, 0.2f, PI},
+        {0.2f, 0.3f, 0.0f}  // zurück zum Start
+    };
 
-    std::unique_ptr<Velocity> vel = computeVelocity(current, goal);
+    for (size_t i = 0; i < goals.size(); ++i) {
+        std::unique_ptr<Velocity> vel = computeVelocity(current, goals[i]);
 
-    std::cout << "Linear velocity v:  " << vel->v << " m/s\n";
-    std::cout << "Angular velocity w: " << vel->w << " rad/s\n";
+        std::cout << "Ziel " << i+1 << ":\n";
+        std::cout << "  Linear velocity v:  " << vel->v << " m/s\n";
+        std::cout << "  Angular velocity w: " << vel->w << " rad/s\n\n";
+
+        // Aktuelle Position auf das neue Ziel setzen
+        current = goals[i];
+    }
 
     return 0;
 }
