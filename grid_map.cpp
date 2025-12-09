@@ -1,7 +1,7 @@
 #include "grid_map.h"
-#include <cstring>   // memset
-#include <fstream>   // ofstream
-#include <iostream>  // optional: Fehlermeldungen
+#include <cstring>    // memset
+#include <fstream>    // ofstream
+#include <iostream>   // cout, cerr
 
 GridMap::GridMap(float res, float ox, float oy)
     : resolution(res), origin_x(ox), origin_y(oy)
@@ -20,6 +20,7 @@ void GridMap::setOccupied(float wx, float wy)
     int my = static_cast<int>((wy - origin_y) / resolution);
 
     if (mx >= 0 && mx < WIDTH && my >= 0 && my < HEIGHT) {
+        // y-Achse nach oben
         cells[HEIGHT - 1 - my][mx] = 255;
     }
 }

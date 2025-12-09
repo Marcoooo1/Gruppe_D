@@ -1,8 +1,8 @@
-#include "mapper.h"
-#include <cmath>
+#define _USE_MATH_DEFINES     // WICHTIG! Damit M_PI verfügbar ist
 #include <math.h>
-
-
+#include <cmath>
+#include "mapper.h"
+#include <iostream>
 
 void doMappingStep(const SharedData& data, GridMap& map)
 {
@@ -20,7 +20,8 @@ void doMappingStep(const SharedData& data, GridMap& map)
         float wx = data.x + r * std::cos(global_angle);
         float wy = data.y + r * std::sin(global_angle);
 
+        std::cout << "wx=" << wx << "  wy=" << wy << "\n";
+
         map.setOccupied(wx, wy);
     }
 }
-
